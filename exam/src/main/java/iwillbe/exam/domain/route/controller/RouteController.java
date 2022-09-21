@@ -1,11 +1,12 @@
 package iwillbe.exam.domain.route.controller;
 
 import iwillbe.exam.domain.line.entity.persist.Line;
-import iwillbe.exam.domain.line.repository.LineRepository;
+import iwillbe.exam.domain.line.service.LineService;
 import iwillbe.exam.domain.route.dto.ShortRouteRequestDTO;
+import iwillbe.exam.domain.route.dto.ShortRouteResponseDTO;
+import iwillbe.exam.domain.route.service.RouteService;
 import iwillbe.exam.domain.station.entity.persist.Station;
-import iwillbe.exam.domain.station.repository.StationRepository;
-import iwillbe.exam.domain.station.utils.ShortestRouteFinder;
+import iwillbe.exam.domain.station.service.StationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
-import java.util.Stack;
 
 @Slf4j
 @RestController
@@ -26,32 +26,28 @@ import java.util.Stack;
 public class RouteController {
 
     @Autowired
-    StationRepository stationRepository;
+    RouteService routeService;
 
     @Autowired
-    LineRepository lineRepository;
+    LineService lineService;
+
+    @Autowired
+    StationService stationService;
 
     @PostMapping // response entity < response >
-    public void findShortRoute(@RequestBody ShortRouteRequestDTO request) {
+
+    public ResponseEntity<ShortRouteResponseDTO> findShortRoute(@RequestBody ShortRouteRequestDTO request) {
 
         String departure = request.getStart();
         String goal = request.getEnd();
 
-        List<Station> stations = stationRepository.findAll();
-        List<Line> lines = lineRepository.findAll();
+        List<Station> stations = stationService.findAll();
+        List<Line> lines = lineService.findAll();
 
-        // 자료형 변환
-
-        ShortestRouteFinder finder = new ShortestRouteFinder();
-
-        finder.run(departure , goal , stations , lines);
-
-        Long shortestTime = finder.shortestTime();
-        Stack<Integer> shortestRoute = finder.shortestRoute();
-
+        URI shortestDistanceURI = URI.create(String.format("/route/%s", departure));
+        return ResponseEntity.created(shortestDistanceURI).body(routeService.findShortestRoute(departure, goal, stations, lines));
 
     }
-
 
 
 }

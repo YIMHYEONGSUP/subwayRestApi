@@ -35,14 +35,13 @@ public class IntegrationTest {
     public void registerTest() {
 
         Station station = Station.builder().stationName("역삼역").build();
-        Line line = Line.builder().start(station).end("강남").build();
+        Line line = Line.builder().start(station.getStationName()).end("강남").build();
 
         Station savedStation = stationRepository.save(station);
         Line savedLine = lineRepository.save(line);
 
         System.out.println("savedStation = " + savedStation.getStationName());
-        System.out.println("savedLine.getStart() = " + savedLine.getStart().getStationName() );
-        System.out.println("savedLine.getEnd() = " + savedLine.getEnd());
+
 
     }
 

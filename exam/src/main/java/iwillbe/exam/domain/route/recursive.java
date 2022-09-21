@@ -4,7 +4,7 @@ package iwillbe.exam.domain.route;
 
 import java.util.*;
 
-public class Daikstra {
+public class recursive {
 
     static  String[] stations = {"강남", "역삼", "삼성", "잠실", "송파", "복정", "성남", "판교", "청계산", "양재", "대치"};
     static  String[][] lines = {
@@ -86,7 +86,10 @@ public class Daikstra {
 
     }
 
+    static int count;
+
     private static void daikstra(int station , Long sum , Stack<Integer> stack , boolean[] visited) {
+        System.out.println("반복 횟수 !! " + count++);
 
         if(station == name.get(goal)){
             System.out.println("name.get(goal) = " + name.get(goal) + " cost = " + sum);
@@ -94,19 +97,12 @@ public class Daikstra {
             if (shortest > sum) {
                 shortest = sum;
 
-                result = stack;
-
-                Object clone = stack.clone();
-
-                System.out.println("clone = " + clone);
-
-                result.forEach((value)->{
-                    System.out.println("value = " + value);
+                result.clear();
+                stack.forEach((value)->{
+                    result.add(value);
                 });
+                result.add(name.get(goal));
 
-                stack.forEach((값은들어있는데)->{
-                    System.out.println("값은들어있는데 = " + 값은들어있는데);
-                });
             }
             return;
         }

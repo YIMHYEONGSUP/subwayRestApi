@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,5 +23,10 @@ public class LineServiceImpl implements LineService{
     @Override
     public LineRegisterResponseDTO registerLine(Line line) {
         return LineRegisterResponseDTO.from(lineRepository.save(line));
+    }
+
+    @Override
+    public List<Line> findAll() {
+        return lineRepository.findAll();
     }
 }

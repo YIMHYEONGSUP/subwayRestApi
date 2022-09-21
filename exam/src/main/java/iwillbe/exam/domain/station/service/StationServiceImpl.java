@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,5 +32,8 @@ public class StationServiceImpl implements StationService{
         return StationResponseDTO.create(findStationName);
     }
 
-
+    @Override
+    public List<Station> findAll() {
+        return stationRepository.findAll();
+    }
 }

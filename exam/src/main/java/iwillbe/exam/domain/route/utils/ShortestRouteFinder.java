@@ -1,12 +1,9 @@
-package iwillbe.exam.domain.station.utils;
+package iwillbe.exam.domain.route.utils;
 
 import iwillbe.exam.domain.line.entity.persist.Line;
 import iwillbe.exam.domain.station.entity.persist.Station;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 public class ShortestRouteFinder {
 
@@ -18,16 +15,7 @@ public class ShortestRouteFinder {
 
     // 결과 값
     static Long shortest = 987654321L;
-    static Stack<Integer> routes;
-
-    public Stack<Integer> shortestRoute() {
-        return routes;
-    }
-
-    public Long shortestTime() {
-        return shortest;
-    }
-
+    static Stack<Integer> routes = new Stack<>();
 
     public void run(String departure , String goal , List<Station> stationsList , List<Line> lineList) {
 
@@ -35,7 +23,6 @@ public class ShortestRouteFinder {
 
         // stations 세팅
         setStations(stationsList);
-
         // lines 세팅
         setLines(lineList);
 
@@ -46,36 +33,60 @@ public class ShortestRouteFinder {
         Long sum = 0L;
         boolean[] visited = new boolean[LEN];
 
-        shortestRoute(start, sum, route, visited);
+        shortest(start, sum, route, visited);
+    }
+    
+    public List<String> getRoute() {
 
+        // 리스트 타입 변환
+        List<String> shortestRoute = new ArrayList<>();
+
+        for (Integer val : routes) {
+            shortestRoute.add(Integer.toString(val));
+        }
+
+        return shortestRoute;
     }
 
-    private void shortestRoute(Integer start, Long sum, Stack<Integer> route, boolean[] visited) {
+    public Long getTime() {
+        return shortest;
+    }
+
+
+    private void shortest(Integer now, Long sum, Stack<Integer> route, boolean[] visited) {
 
         // 탈출 조건
-        if (start == stations.get(GOAL)) {
+        if (now == GOAL) {
             if (shortest > sum) {
                 shortest = sum;
-                routes = route;
+
+                routes.clear();
+
+                route.forEach((val)->{
+                    routes.add(val);
+                });
+                routes.add(GOAL);
             }
             return;
         }
 
-        lines.forEach((nowStation , map)->{
-            map.forEach((nextStation , time)->{
-                if(!visited[nextStation]){
-                    route.add(nowStation);
-                    visited[nowStation] = true;
-                    shortestRoute(nextStation , sum + time , route , visited);
-                    route.pop();
-                    visited[nowStation] = false;
-                }
-            });
-        });
+       lines.get(now).forEach((next , cost) -> {
+           if (!visited[next]) {
+               route.add(now);
+               visited[now] = true;
+               shortest(next, sum + cost, route, visited);
+               route.pop();
+               visited[now] = false;
+           }
+       });
 
 
     }
-
+    private void setStations(List<Station> stationsList) {
+        for (int i = 0; i < stationsList.size(); i++) {
+            stations.put(stationsList.get(i).getStationName(), i);
+        }
+    }
     private void setLines(List<Line> lineList) {
         for (Line line : lineList) {
             Integer start = stations.get(line.getStart());
@@ -94,9 +105,6 @@ public class ShortestRouteFinder {
         }
     }
 
-    private void setStations(List<Station> stationsList) {
-        for (int i = 0; i < stationsList.size(); i++) {
-            stations.put(stationsList.get(i).getStationName(), i);
-        }
-    }
+
+   
 }
