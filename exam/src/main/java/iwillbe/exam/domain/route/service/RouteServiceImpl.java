@@ -22,9 +22,6 @@ public class RouteServiceImpl implements RouteService{
         Long shortestTime = finder.getTime();
         List<String> shortestRoute = finder.getRoute();
 
-        System.out.println("!!! 최단거리 : " + shortestTime);
-        System.out.println("최단 루트 !!!! : " + shortestRoute);
-
         return ShortRouteResponseDTO.builder()
                 .shortestTime(shortestTime)
                 .shortestRoute(shortestRoute)

@@ -1,6 +1,7 @@
 package iwillbe.exam.domain.line.controller;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import io.swagger.annotations.Api;
 import iwillbe.exam.domain.line.dto.LineRegisterRequestDTO;
 import iwillbe.exam.domain.line.dto.LineRegisterResponseDTO;
 import iwillbe.exam.domain.line.entity.persist.Line;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+@Api("지하철 노선 정보 등록 API")
 @Slf4j
 @RestController
 @RequestMapping("/line")
@@ -29,6 +31,7 @@ public class LineController {
 
     @Autowired
     StationService stationService;
+
     @PostMapping
     public ResponseEntity<LineRegisterResponseDTO> registerLine(@RequestBody LineRegisterRequestDTO requestDTO) {
 

@@ -1,5 +1,6 @@
 package iwillbe.exam.domain.station.controller;
 
+import io.swagger.annotations.Api;
 import iwillbe.exam.domain.station.dto.StationRegisterRequestDTO;
 import iwillbe.exam.domain.station.dto.StationRegisterResponseDTO;
 import iwillbe.exam.domain.station.entity.persist.Station;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
+@Api("지하철 역 등록 API")
 @Slf4j
 @RestController
 @RequestMapping("/subway")

@@ -1,5 +1,6 @@
 package iwillbe.exam.domain.route.controller;
 
+import io.swagger.annotations.*;
 import iwillbe.exam.domain.line.entity.persist.Line;
 import iwillbe.exam.domain.line.service.LineService;
 import iwillbe.exam.domain.route.dto.ShortRouteRequestDTO;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.List;
 
+@Api("최단 경로 계산 API")
 @Slf4j
 @RestController
 @RequestMapping("/route")
@@ -34,9 +36,11 @@ public class RouteController {
     @Autowired
     StationService stationService;
 
-    @PostMapping // response entity < response >
+    @ApiOperation(value = "최단 루트 , 시간 탐색" , notes = "출발역 과 도착역 사이 최단 루트 , 시간 확인")
+    @PostMapping
+    public ResponseEntity<ShortRouteResponseDTO> findShortRoute(
 
-    public ResponseEntity<ShortRouteResponseDTO> findShortRoute(@RequestBody ShortRouteRequestDTO request) {
+            @RequestBody ShortRouteRequestDTO request) {
 
         String departure = request.getStart();
         String goal = request.getEnd();

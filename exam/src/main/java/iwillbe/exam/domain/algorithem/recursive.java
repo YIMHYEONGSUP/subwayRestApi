@@ -1,4 +1,4 @@
-package iwillbe.exam.domain.route;
+package iwillbe.exam.domain.algorithem;
 
 
 
@@ -32,9 +32,11 @@ public class recursive {
     static List<Integer> copyList = new ArrayList<>();
     static Stack<Integer> result = new Stack<>();
 
+    static int count;
+
     public static void main(String[] args) {
 
-        departure = "판교";
+        departure = "역삼";
         goal = "삼성";
 
         // 지하철 역 key , value (index)
@@ -73,26 +75,20 @@ public class recursive {
         int index = name.get(departure);
         Stack<Integer> stack = new Stack<Integer>();
 
-        daikstra(index , 0L , stack , visited);
+        // 최단거리,최단시간 탐색
+        find(index , 0L , stack , visited);
 
-        // 리스트는 없앴음...
-        System.out.println("최단 거리 : " + copyList);
         System.out.println("최단 시간 : " + shortest);
-        System.out.println("result = " + result);
+        System.out.println("최단 루트 : " + result);
+        System.out.println("총 탐색 횟수 : " + count);
 
     }
 
-    public void copyObject(Stack<Integer> stack) {
 
-    }
-
-    static int count;
-
-    private static void daikstra(int station , Long sum , Stack<Integer> stack , boolean[] visited) {
-        System.out.println("반복 횟수 !! " + count++);
+    private static void find(int station , Long sum , Stack<Integer> stack , boolean[] visited) {
+        count++;
 
         if(station == name.get(goal)){
-            System.out.println("name.get(goal) = " + name.get(goal) + " cost = " + sum);
 
             if (shortest > sum) {
                 shortest = sum;
@@ -109,10 +105,10 @@ public class recursive {
 
         // 2중 map -> key (start) value ( map ( end , cost ) )
         lineCost.get(station).forEach((end , cost)->{
-            if(!visited[end]){
+            if(!visited[end] && shortest > sum){ // 최소값과 현재값 비교 탐색횟수 88 -> 27 감소
                 stack.add(station);
                 visited[station] = true;
-                daikstra(end , sum+cost , stack , visited);
+                find(end , sum+cost , stack , visited);
                 stack.pop();
                 visited[station] = false;
             }

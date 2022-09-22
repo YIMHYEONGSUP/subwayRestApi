@@ -7,7 +7,8 @@ import java.util.*;
 
 public class ShortestRouteFinder {
 
-    static Map<String , Integer> stations = new LinkedHashMap<>();;
+    static Map<String , Integer> stations = new LinkedHashMap<>();
+    static Map<Integer , String> stationNames = new LinkedHashMap<>();
     static Map<Integer, Map<Integer, Long>> lines = new LinkedHashMap<>();;
 
     static int LEN;
@@ -42,7 +43,8 @@ public class ShortestRouteFinder {
         List<String> shortestRoute = new ArrayList<>();
 
         for (Integer val : routes) {
-            shortestRoute.add(Integer.toString(val));
+//            shortestRoute.add(Integer.toString(val));
+            shortestRoute.add(stationNames.get(val));
         }
 
         return shortestRoute;
@@ -71,7 +73,7 @@ public class ShortestRouteFinder {
         }
 
        lines.get(now).forEach((next , cost) -> {
-           if (!visited[next]) {
+           if (!visited[next] && shortest > sum) {
                route.add(now);
                visited[now] = true;
                shortest(next, sum + cost, route, visited);
@@ -85,6 +87,7 @@ public class ShortestRouteFinder {
     private void setStations(List<Station> stationsList) {
         for (int i = 0; i < stationsList.size(); i++) {
             stations.put(stationsList.get(i).getStationName(), i);
+            stationNames.put(i, stationsList.get(i).getStationName());
         }
     }
     private void setLines(List<Line> lineList) {
