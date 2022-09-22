@@ -3,9 +3,25 @@ package iwillbe.exam.domain.route.utils;
 import iwillbe.exam.domain.line.entity.persist.Line;
 import iwillbe.exam.domain.station.entity.persist.Station;
 
+import java.io.LineNumberReader;
 import java.util.*;
 
-public class ShortestRouteFinder {
+class StationInfo implements Comparable<StationInfo> {
+    int station;
+    int time;
+
+    public StationInfo(int station, int time) {
+        this.station = station;
+        this.time = time;
+    }
+
+    @Override
+    public int compareTo(StationInfo o) {
+        return this.time - o.time;
+    }
+}
+
+public class DijkstraFinder {
 
     static Map<String , Integer> stations = new LinkedHashMap<>();
     static Map<Integer , String> stationNames = new LinkedHashMap<>();
@@ -13,10 +29,13 @@ public class ShortestRouteFinder {
 
     static int LEN;
     static Integer GOAL;
+    static int INF = 987654321;
 
-    // 결과 값
-    static Long shortest = 987654321L;
     static Stack<Integer> routes = new Stack<>();
+
+    static int[][] dijkstra;
+    static int[] dist;
+    static boolean[] visited;
 
     public void run(String departure , String goal , List<Station> stationsList , List<Line> lineList) {
 
@@ -34,9 +53,39 @@ public class ShortestRouteFinder {
         Long sum = 0L;
         boolean[] visited = new boolean[LEN];
 
-        shortest(start, sum, route, visited);
+        // 출발점 넣기
+        dijkstra(stations.get(departure));
     }
-    
+
+    static int count;
+    private static void dijkstra(int start) {
+
+        PriorityQueue<StationInfo> pq = new PriorityQueue<>();
+        Arrays.fill(dist , INF);
+        dist[start] = 0;
+        pq.offer(new StationInfo(start, dist[start]));
+
+        while (!pq.isEmpty()) {
+            count++;
+
+            int now = pq.peek().station;
+            int cost = pq.peek().time;
+            pq.poll();
+
+            if (cost > dist[now]) {
+                continue;
+            }
+
+            for (int i = 0; i < LEN; i++) {
+                if (dijkstra[now][i] != 0 && dist[i] > (dist[now] + dijkstra[now][i])) {
+                    dist[i] = dist[now] + dijkstra[now][i];
+                    pq.offer(new StationInfo(i, dist[i]));
+                }
+            }
+
+        }
+    }
+
     public List<String> getRoute() {
 
         // 리스트 타입 변환
@@ -50,39 +99,10 @@ public class ShortestRouteFinder {
     }
 
     public Long getTime() {
-        return shortest;
+//        return dist[GOAL];
+        return 0L;
     }
 
-
-    private void shortest(Integer now, Long sum, Stack<Integer> route, boolean[] visited) {
-
-        // 탈출 조건
-        if (now == GOAL) {
-            if (shortest > sum) {
-                shortest = sum;
-
-                routes.clear();
-
-                route.forEach((val)->{
-                    routes.add(val);
-                });
-                routes.add(GOAL);
-            }
-            return;
-        }
-
-       lines.get(now).forEach((next , cost) -> {
-           if (!visited[next] && shortest > sum) {
-               route.add(now);
-               visited[now] = true;
-               shortest(next, sum + cost, route, visited);
-               route.pop();
-               visited[now] = false;
-           }
-       });
-
-
-    }
     private void setStations(List<Station> stationsList) {
         for (int i = 0; i < stationsList.size(); i++) {
             stations.put(stationsList.get(i).getStationName(), i);
@@ -107,6 +127,4 @@ public class ShortestRouteFinder {
         }
     }
 
-
-   
 }

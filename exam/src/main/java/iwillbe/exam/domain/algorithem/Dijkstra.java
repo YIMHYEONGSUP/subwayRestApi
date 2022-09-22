@@ -1,9 +1,6 @@
 package iwillbe.exam.domain.algorithem;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 
 class Element implements Comparable<Element> {
@@ -49,10 +46,12 @@ public class Dijkstra {
     static int[] dist;
     static boolean[] visited;
 
+    static Stack<Integer> route = new Stack<>();
 
     public static void main(String[] args) {
 
         Map<String, Integer> stationNumber = new LinkedHashMap<>();
+
         for (int i = 0; i < LENGTH; i++) {
             stationNumber.put(stations[i], i);
         }
@@ -92,17 +91,25 @@ public class Dijkstra {
             }
             System.out.println();
         }
-        
+
+        System.out.println("역 별 최소 거리 = " + Arrays.toString(dist));
+        System.out.println("최단 루트 = " + route);
+        System.out.println("최소 시간 = " + dist[stationNumber.get(GOAL)]);
+        System.out.println("반복 횟수 =" + count);
     }
 
+    static int count = 0;
 
     private static void dijkstra(int start) {
 
         PriorityQueue<Element> pq = new PriorityQueue<>();
+        Arrays.fill(dist , INF);
         dist[start] = 0;
         pq.offer(new Element(start, dist[start]));
 
         while (!pq.isEmpty()) {
+            count++;
+
             int now = pq.peek().station;
             int cost = pq.peek().time;
             pq.poll();
@@ -115,6 +122,9 @@ public class Dijkstra {
                 if (dijkstra[now][i] != 0 && dist[i] > (dist[now] + dijkstra[now][i])) {
                     dist[i] = dist[now] + dijkstra[now][i];
                     pq.offer(new Element(i, dist[i]));
+
+                    System.out.println(" 현재 " + now + " --> 연결 역" + i + " 현재 비용 :" + dijkstra[now][i]);
+                    route.add(now);
                 }
             }
 
