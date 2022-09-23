@@ -124,7 +124,13 @@ public class Dijkstra {
                     pq.offer(new Element(i, dist[i]));
 
                     System.out.println(" 현재 " + now + " --> 연결 역" + i + " 현재 비용 :" + dijkstra[now][i]);
+
+
+                    if(!route.isEmpty() && route.peek() == now){
+                        route.pop();
+                    }
                     route.add(now);
+
                 }
             }
 

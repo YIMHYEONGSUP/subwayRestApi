@@ -36,8 +36,8 @@ public class recursive {
 
     public static void main(String[] args) {
 
-        departure = "역삼";
-        goal = "삼성";
+        departure = "대치";
+        goal = "송파";
 
         // 지하철 역 key , value (index)
         name = new LinkedHashMap<>();
