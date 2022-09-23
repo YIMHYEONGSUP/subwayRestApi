@@ -5,6 +5,9 @@
 ![image](https://user-images.githubusercontent.com/101487300/191496398-715ccf61-4c09-4fa1-a2e3-13a6e5baf734.png)
 
 
+# 테스트 방법
+Swagger ( route-controller ) , post man { "line_start":"판교" , "line_end":"삼성" }
+
 # 2022 09 20 
 Station , Line 값을 PostConstruct로 세팅
 
